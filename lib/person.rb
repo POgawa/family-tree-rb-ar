@@ -1,7 +1,7 @@
 class Person < ActiveRecord::Base
   validates :name, :presence => true
 
-  after_save :make_marriage_reciprocal
+  # after_save :make_marriage_reciprocal
 
   def spouse
     if spouse_id.nil?
@@ -11,11 +11,11 @@ class Person < ActiveRecord::Base
     end
   end
 
-private
+# private
 
-  def make_marriage_reciprocal
-    if spouse_id_changed?
-      spouse.update(:spouse_id => id)
-    end
-  end
+#   def make_marriage_reciprocal
+#     if spouse_id_changed?
+#       spouse.update(:spouse_id => id)
+#     end
+#   end
 end

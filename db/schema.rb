@@ -11,14 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328001044) do
+ActiveRecord::Schema.define(version: 20140328174348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "married", force: true do |t|
+    t.integer  "spouse1_id"
+    t.integer  "spouse2_id"
+    t.boolean  "divorced"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "parents", force: true do |t|
+    t.integer  "father_id"
+    t.integer  "mother_id"
+    t.integer  "person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "people", force: true do |t|
-    t.string  "name"
-    t.integer "spouse_id"
+    t.string   "sex"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

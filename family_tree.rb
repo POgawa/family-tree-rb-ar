@@ -7,22 +7,25 @@ development_configuration = database_configurations['development']
 ActiveRecord::Base.establish_connection(development_configuration)
 
 def menu
+  system 'clear'
   puts 'Welcome to the family tree!'
   puts 'What would you like to do?'
-
+  gets.chomp
   loop do
-    puts 'Press a to add a family member.'
-    puts 'Press l to list out the family members.'
-    puts 'Press m to add who someone is married to.'
-    puts 'Press s to see who someone is married to.'
+    system 'clear'
+    list
+    puts 'Enter add [name] to add a person with name [name].'
+    puts 'Enter edit [id] to edit relationships pertaining to [id].'
     puts 'Press e to exit.'
-    choice = gets.chomp
+    choice = gets.chomp.split
 
-    case choice
-    when 'a'
-      add_person
-    when 'l'
-      list
+    case choice[0]
+    when 'add'
+      choice.shift
+      Person.create({:name => choice.join(' ')})
+    when 'edit'
+      choice.shift
+      edit_relationships(choice[0].to_i)
     when 'm'
       add_marriage
     when 's'
@@ -33,38 +36,44 @@ def menu
   end
 end
 
-def add_person
-  puts 'What is the name of the family member?'
-  name = gets.chomp
-  Person.create(:name => name)
-  puts name + " was added to the family tree.\n\n"
-end
-
-def add_marriage
-  list
-  puts 'What is the number of the first spouse?'
-  spouse1 = Person.find(gets.chomp)
-  puts 'What is the number of the second spouse?'
-  spouse2 = Person.find(gets.chomp)
-  spouse1.update(:spouse_id => spouse2.id)
-  puts spouse1.name + " is now married to " + spouse2.name + "."
+def edit_relationships(person_id)
+  loop do
+    person = Person.find_by(id: person_id)
+    system 'clear'
+    #list people
+    #list imediate relatives
+    puts '
+    Enter parents [id1], [id2] parents to this person.
+    Enter spouse [spouse_id] spouse to this person.
+    Enter child [child_id] [sigFig_id] to add child.
+    Enter e to go back'
+    input = gets.chomp.split
+    case input[0]
+    when 'parents'
+      input.shift
+      input = input.join.split(',')
+      Parent.create({:spouse1_id => input[0].to_i, :spouse2_id => input[1].to_i})
+    when 'spouse'
+      input.shift
+    when 'child'
+      input.shift
+    when 'e'
+      break
+    end
+  end
 end
 
 def list
-  puts 'Here are all your relatives:'
-  people = Person.all
-  people.each do |person|
-    puts person.id.to_s + " " + person.name
+  if Person.all.length > 0
+    puts 'Here are all the people:'
+    puts 'id - name'
+    puts '-------------------'
+    people = Person.all
+    people.each do |person|
+      puts person.id.to_s + " " + person.name
+    end
+    puts "\n"
   end
-  puts "\n"
-end
-
-def show_marriage
-  list
-  puts "Enter the number of the relative and I'll show you who they're married to."
-  person = Person.find(gets.chomp)
-  spouse = Person.find(person.spouse_id)
-  puts person.name + " is married to " + spouse.name + "."
 end
 
 menu
