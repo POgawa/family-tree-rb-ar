@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328174348) do
+ActiveRecord::Schema.define(version: 20140328185818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "married", force: true do |t|
+  create_table "marriages", force: true do |t|
     t.integer  "spouse1_id"
     t.integer  "spouse2_id"
     t.boolean  "divorced"
